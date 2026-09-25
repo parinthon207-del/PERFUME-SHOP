@@ -7,13 +7,12 @@ class BaseProduct {
 
     constructor(id, name, brand, price, image) {
         this.#id = id;
-        this.name = name.replace(/["']/g, ''); // Encapsulation & Clean string
+        this.name = name.replace(/["']/g, '');
         this.brand = brand;
         this.#price = price;
         this.image = image;
     }
 
-    // Encapsulation: Getter / Setter
     getId() {
         return this.#id;
     }
@@ -22,7 +21,6 @@ class BaseProduct {
         return this.#price;
     }
 
-    // Polymorphism: Method ที่ถูกเตรียมไว้ให้อนุพัทธ์ (Subclass) Override
     getFormattedDetails() {
         return `ราคา ฿${this.#price.toLocaleString()}`;
     }
@@ -32,28 +30,33 @@ class BaseProduct {
 // 2. INHERITANCE & POLYMORPHISM
 // ==========================================
 class Perfume extends BaseProduct {
-    constructor(id, name, brand, type, volume, price, details, image) {
-        // Inheritance: เรียกใช้ constructor ของคลาสแม่ (BaseProduct)
+    constructor(id, name, brand, type, volume, price, details, image, notes = {}) {
         super(id, name, brand, price, image);
         this.type = type;
         this.volume = volume;
         this.details = details;
+        // เพิ่ม Fragrance Notes (Top, Middle, Base)
+        this.notes = {
+            top: notes.top || 'Bergamot, Fresh Citrus',
+            middle: notes.middle || 'Floral, Cedarwood',
+            base: notes.base || 'Sandalwood, Amber, Musk'
+        };
     }
 
-    // Polymorphism (Method Overriding): ปรับเปลี่ยนการทำงานจากคลาสแม่
+    // Method Overriding (Polymorphism)
     getFormattedDetails() {
         return `${this.type} | ${this.volume}ml - ฿${this.getPrice().toLocaleString()}`;
     }
 }
 
 // ==========================================
-// 3. ENCAPSULATION (Cart Item Management)
+// 3. ENCAPSULATION (Cart Item)
 // ==========================================
 class CartItem {
     #quantity;
 
     constructor(product, quantity = 1) {
-        this.product = product; // Instance ของ Perfume
+        this.product = product;
         this.#quantity = quantity;
     }
 
@@ -62,9 +65,7 @@ class CartItem {
     }
 
     setQuantity(amount) {
-        if (amount >= 0) {
-            this.#quantity = amount;
-        }
+        if (amount >= 0) this.#quantity = amount;
     }
 
     increment() {
@@ -81,11 +82,11 @@ class CartItem {
 }
 
 // ==========================================
-// 4. SHOPPING CART CLASS (Business Logic)
+// 4. SHOPPING CART CLASS
 // ==========================================
 class ShoppingCart {
     constructor() {
-        this.items = []; // Array ของ CartItem
+        this.items = [];
     }
 
     addItem(product) {
@@ -129,12 +130,12 @@ class ShoppingCart {
 }
 
 // ==========================================
-// 5. UI MANAGER CLASS (DOM & Event Handling)
+// 5. UI MANAGER CLASS
 // ==========================================
 class UIManager {
     constructor(productsData) {
         this.products = productsData.map(p => 
-            new Perfume(p.id, p.name, p.brand, p.type, p.volume, p.price, p.details, p.image)
+            new Perfume(p.id, p.name, p.brand, p.type, p.volume, p.price, p.details, p.image, p.notes)
         );
         this.cart = new ShoppingCart();
         this.activeCategory = 'ALL';
@@ -162,15 +163,18 @@ class UIManager {
         grid.innerHTML = productsToRender.map(product => `
             <div class="bg-white rounded-xl p-5 border border-[#8C827A]/20 flex flex-col justify-between hover:border-[#C5A070] transition-all duration-300 group shadow-sm">
                 <div>
-                    <div class="relative overflow-hidden rounded-lg mb-4 bg-[#FDFBF7] aspect-square">
+                    <div onclick="app.showProductDetail(${product.getId()})" class="relative overflow-hidden rounded-lg mb-4 bg-[#FDFBF7] aspect-square cursor-pointer">
                         <img src="${product.image}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="${product.name}">
                         <span class="absolute top-2.5 left-2.5 bg-[#181716] text-[#FDFBF7] text-[9px] font-bold px-2 py-0.5 rounded uppercase">
                             ${product.type}
                         </span>
+                        <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-xs font-bold">
+                            <i class="fa-solid fa-eye mr-1"></i> ดูรายละเอียด
+                        </div>
                     </div>
 
                     <p class="text-[10px] text-[#C5A070] font-bold uppercase tracking-widest mb-1">${product.brand}</p>
-                    <h3 class="text-base font-bold text-[#181716] mb-1 leading-snug">${product.name}</h3>
+                    <h3 onclick="app.showProductDetail(${product.getId()})" class="text-base font-bold text-[#181716] mb-1 leading-snug cursor-pointer hover:text-[#C5A070] transition">${product.name}</h3>
                     <p class="text-xs text-[#8C827A] font-normal mb-4 line-clamp-2">${product.details}</p>
                 </div>
 
@@ -185,6 +189,41 @@ class UIManager {
                 </div>
             </div>
         `).join('');
+    }
+
+    showProductDetail(productId) {
+        const product = this.products.find(p => p.getId() === productId);
+        if (!product) return;
+
+        const content = document.getElementById('modal-detail-content');
+        if (!content) return;
+
+        content.innerHTML = `
+            <div class="flex flex-col md:flex-row gap-6 items-center">
+                <img src="${product.image}" class="w-40 h-40 object-cover rounded-2xl bg-[#FDFBF7] shadow-md">
+                <div class="flex-1 text-left">
+                    <span class="text-[10px] font-bold text-[#C5A070] uppercase tracking-widest">${product.brand}</span>
+                    <h2 class="text-2xl font-bold text-[#181716] mb-1">${product.name}</h2>
+                    <p class="text-xs text-[#8C827A] mb-3">${product.details}</p>
+                    <p class="text-lg font-bold text-[#181716]">${product.getFormattedDetails()}</p>
+                </div>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-stone-100 space-y-2 text-left bg-[#FDFBF7] p-4 rounded-xl">
+                <h4 class="text-xs font-bold text-[#181716] uppercase tracking-wider mb-2">Fragrance Notes Structure</h4>
+                <div class="text-xs text-[#8C827A]"><strong class="text-[#181716]">Top Notes:</strong> ${product.notes.top}</div>
+                <div class="text-xs text-[#8C827A]"><strong class="text-[#181716]">Middle Notes:</strong> ${product.notes.middle}</div>
+                <div class="text-xs text-[#8C827A]"><strong class="text-[#181716]">Base Notes:</strong> ${product.notes.base}</div>
+            </div>
+
+            <div class="mt-6 flex gap-3">
+                <button onclick="app.addToCart(${product.getId()}); closeProductDetailModal();" class="flex-1 py-3 rounded-xl btn-primary text-xs font-bold transition active:scale-95">
+                    + เพิ่มลงตะกร้าทันที
+                </button>
+            </div>
+        `;
+
+        openProductDetailModal();
     }
 
     addToCart(productId) {
@@ -296,7 +335,7 @@ class UIManager {
     }
 }
 
-// --- MOCK DATA ---
+// --- MOCK DATA WITH FRAGRANCE NOTES ---
 const productsData = [
     {
         id: 1,
@@ -306,7 +345,8 @@ const productsData = [
         volume: 100,
         price: 10500,
         details: "กลิ่นไม้หอมในตำนาน อบอุ่นด้วย Sandalwood, Cedarwood และ Cardamom",
-        image: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&q=80&w=800"
+        image: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&q=80&w=800",
+        notes: { top: "Violet Accord, Cardamom", middle: "Iris, Ambrox", base: "Cedarwood, Leather, Sandalwood" }
     },
     {
         id: 2,
@@ -316,7 +356,8 @@ const productsData = [
         volume: 100,
         price: 6700,
         details: "กลิ่นหอมสดชื่น ลุ่มลึก นุ่มนวล เผยเสน่ห์ความเป็นผู้ชายอย่างมีสไตล์",
-        image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&q=80&w=800"
+        image: "https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&q=80&w=800",
+        notes: { top: "Lemon, Mint, Pink Pepper", middle: "Ginger, Iso E Super, Jasmine", base: "Labdanum, Sandalwood, Cedar" }
     },
     {
         id: 3,
@@ -326,7 +367,8 @@ const productsData = [
         volume: 100,
         price: 5200,
         details: "กลิ่นหอมสดชื่น ทรงพลัง ด้วยส่วนผสมของ Bergamot และ Ambroxan",
-        image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=800"
+        image: "https://images.unsplash.com/photo-1541643600914-78b084683601?auto=format&fit=crop&q=80&w=800",
+        notes: { top: "Calabrian Bergamot, Pepper", middle: "Sichuan Pepper, Lavender, Vetiver", base: "Ambroxan, Cedar, Labdanum" }
     },
     {
         id: 4,
@@ -336,7 +378,8 @@ const productsData = [
         volume: 70,
         price: 11500,
         details: "กลิ่นหอมหวานละมุน มะลิ และ Saffron ผสานความอบอุ่นของ Amberwood",
-        image: "https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&q=80&w=800"
+        image: "https://images.unsplash.com/photo-1588405748880-12d1d2a59f75?auto=format&fit=crop&q=80&w=800",
+        notes: { top: "Jasmine, Saffron", middle: "Amberwood, Ambergris", base: "Fir Resin, Cedar" }
     }
 ];
 
@@ -347,7 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
     app.init();
 });
 
-// GLOBAL HELPER FUNCTIONS FOR HTML EVENTS
+// GLOBAL HELPER FUNCTIONS
 function toggleCartModal() {
     const modal = document.getElementById('cart-modal');
     const panel = document.getElementById('cart-panel');
@@ -363,33 +406,39 @@ function toggleCartModal() {
     }
 }
 
+function openProductDetailModal() {
+    const modal = document.getElementById('product-detail-modal');
+    if (!modal) return;
+    modal.classList.remove('invisible', 'opacity-0');
+}
+
+function closeProductDetailModal() {
+    const modal = document.getElementById('product-detail-modal');
+    if (!modal) return;
+    modal.classList.add('opacity-0');
+    setTimeout(() => modal.classList.add('invisible'), 300);
+}
+
 function handleSearch() { app.handleSearch(); }
 function filterCategory(cat, ev) { app.filterCategory(cat, ev); }
 function handleCheckout() { app.handleCheckout(); }
 
-// Success Pop-up Modal (แสดงผล 2.5 วินาที แล้วปิดให้อัตโนมัติ)
 function openSuccessModal() {
     const modal = document.getElementById('checkout-success-modal');
     const panel = document.getElementById('success-panel');
     const icon = document.getElementById('success-icon');
 
     if (!modal || !panel) return;
-
     panel.classList.remove('animate-pop-in');
     if (icon) icon.classList.remove('animate-check-pop');
 
-    // แสดง Modal
     modal.classList.remove('invisible', 'opacity-0');
-
     setTimeout(() => {
         panel.classList.add('animate-pop-in');
         if (icon) icon.classList.add('animate-check-pop');
     }, 10);
 
-    // ⏳ สั่งปิด Modal อัตโนมัติหลังผ่านไป 2.5 วินาที (2500ms)
-    setTimeout(() => {
-        closeSuccessModal();
-    }, 2500);
+    setTimeout(() => closeSuccessModal(), 2500);
 }
 
 function closeSuccessModal() {
