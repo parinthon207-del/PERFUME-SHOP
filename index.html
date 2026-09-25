@@ -9,7 +9,10 @@
     <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="styles.css">
-</head>
+    <!-- แทรก Favicon ไอคอนน้ำหอม -->
+
+    <!-- AROMACRAFT 3D Metallic Gold & Pearl Favicon -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><defs><linearGradient id='goldGrad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' stop-color='%23FFF2B2'/><stop offset='30%' stop-color='%23F1C40F'/><stop offset='70%' stop-color='%23B8860B'/><stop offset='100%' stop-color='%237A5200'/></linearGradient><linearGradient id='bgGrad' x1='0%' y1='0%' x2='0%' y2='100%'><stop offset='0%' stop-color='%23FFFFFF'/><stop offset='100%' stop-color='%23E8E3D9'/></linearGradient><filter id='shadow' x='-20%' y='-20%' width='140%' height='140%'><feDropShadow dx='0' dy='8' stdDeviation='8' flood-color='%23000000' flood-opacity='0.25'/></filter></defs><circle cx='256' cy='256' r='236' fill='url(%23bgGrad)' stroke='url(%23goldGrad)' stroke-width='16' filter='url(%23shadow)'/><circle cx='256' cy='256' r='205' fill='none' stroke='url(%23goldGrad)' stroke-width='4' stroke-dasharray='10 6' opacity='0.6'/><g filter='url(%23shadow)'><path d='M256 115 L175 365 H215 L235 300 H277 L297 365 H337 L256 115 Z M256 188 L269 260 H243 L256 188 Z' fill='url(%23goldGrad)'/><circle cx='256' cy='85' r='16' fill='url(%23goldGrad)'/><circle cx='318' cy='105' r='9' fill='url(%23goldGrad)' opacity='0.85'/><circle cx='194' cy='105' r='9' fill='url(%23goldGrad)' opacity='0.85'/></g></svg>">
 <body class="antialiased relative overflow-x-hidden">
 
     <!-- Golden Ambient Background Blur Blobs -->
@@ -151,6 +154,20 @@
 
         </div>
     </div>
-    
+    <!-- Product Detail Modal (ป๊อปอัพเจาะลึกรายละเอียดกลิ่น) -->
+    <div id="product-detail-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300 invisible opacity-0">
+        <div id="detail-panel" class="bg-white rounded-3xl p-6 md:p-8 max-w-lg w-full shadow-2xl border border-[#C5A070]/30 transform transition-all duration-300 relative overflow-hidden">
+        
+            <!-- ปุ่มปิด (X) -->
+            <button onclick="closeProductDetailModal()" class="absolute top-4 right-4 w-8 h-8 rounded-full bg-[#FDFBF7] text-[#8C827A] hover:text-[#181716] flex items-center justify-center transition">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div id="modal-detail-content">
+                <!-- Dynamic Content จะถูกแสดงผ่าน JS -->
+            </div>
+
+        </div>
+    </div>
 </body>
 </html>
