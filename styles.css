@@ -1,0 +1,165 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    --primary-black: #181716;
+    --secondary-gold: #C5A070;
+    --tertiary-gray: #8C827A;
+}
+
+/* Base Body with Soft White-Gold Gradient */
+body {
+    font-family: 'Plus Jakarta Sans', 'Noto Sans Thai', sans-serif;
+    color: var(--primary-black);
+    background: linear-gradient(135deg, #FFFFFF 0%, #FAF6EE 40%, #F5EBDC 80%, #EFE3CE 100%);
+    background-attachment: fixed;
+    min-height: 100vh;
+}
+
+h1, h2, h3, h4, .font-headline {
+    font-family: 'Plus Jakarta Sans', 'Noto Sans Thai', sans-serif;
+    letter-spacing: -0.02em;
+}
+
+/* Glassmorphism Navigation Bar */
+header {
+    background: rgba(255, 255, 255, 0.85) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(197, 160, 112, 0.2);
+}
+
+/* Buttons Styling */
+.btn-primary {
+    background-color: #181716;
+    color: #FDFBF7;
+    transition: all 0.25s ease;
+}
+.btn-primary:hover {
+    background-color: #C5A070;
+    color: #FFFFFF;
+    box-shadow: 0 4px 15px rgba(197, 160, 112, 0.3);
+}
+
+.input-search {
+    background-color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(197, 160, 112, 0.25);
+    backdrop-filter: blur(6px);
+}
+.input-search:focus-within {
+    border-color: #C5A070;
+    background-color: #FFFFFF;
+    box-shadow: 0 0 12px rgba(197, 160, 112, 0.2);
+}
+
+/* Filter Buttons with Hover Golden Effect */
+.filter-btn {
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #181716;
+    border: 1px solid rgba(197, 160, 112, 0.3);
+    backdrop-filter: blur(4px);
+}
+
+.filter-btn:hover {
+    background-color: #C5A070;
+    color: #FFFFFF !important;
+    border-color: #C5A070;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(197, 160, 112, 0.3);
+}
+
+.filter-btn.active {
+    background-color: #181716 !important;
+    color: #FDFBF7 !important;
+    border-color: #181716 !important;
+}
+
+.filter-btn.active:hover {
+    background-color: #C5A070 !important;
+    border-color: #C5A070 !important;
+    color: #FFFFFF !important;
+}
+
+/* Custom Minimalist Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: #C5A070;
+    border-radius: 10px;
+}
+
+/* Animation สำหรับตัว Pop-up เด้งนุ่มนวล (Spring Bounce) */
+@keyframes popIn {
+    0% {
+        opacity: 0;
+        transform: scale(0.7) translateY(20px);
+    }
+    70% {
+        transform: scale(1.05) translateY(-4px);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* Animation สำหรับไอคอนติ๊กถูก หมุนและขยายตัวขึ้นมา */
+@keyframes checkPop {
+    0% {
+        transform: scale(0) rotate(-45deg);
+        opacity: 0;
+    }
+    70% {
+        transform: scale(1.2) rotate(10deg);
+    }
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+    }
+}
+
+/* Animation สำหรับแสงออร่าทองระยิบระยับจางๆ รอบไอคอน */
+@keyframes goldPulse {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(197, 160, 112, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 15px rgba(197, 160, 112, 0);
+    }
+}
+
+/* Class สำหรับเรียกใช้ Animation */
+.animate-pop-in {
+    animation: popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.animate-check-pop {
+    animation: checkPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) 0.15s forwards;
+    opacity: 0; /* ซ่อนไว้ก่อนรอเล่นอนิเมชัน */
+}
+
+.animate-gold-pulse {
+    animation: goldPulse 2s infinite;
+}
+/* เงาลึกพิเศษผสมออร่าสีทองสำหรับ Drawer ด้านข้าง */
+.drawer-depth-shadow {
+    box-shadow: -15px 0 45px -10px rgba(24, 23, 22, 0.25), 
+                -5px 0 15px -5px rgba(197, 160, 112, 0.15);
+}
+
+/* Custom Cubic-Bezier ให้การสไลด์มีมิติสมูทแบบ Elastic */
+.transition-drawer {
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), 
+                opacity 0.35s ease;
+}
+
+/* เอฟเฟกต์ Glassmorphic ชัดเจนขึ้น */
+.glass-panel {
+    background: rgba(250, 246, 238, 0.92) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+}
