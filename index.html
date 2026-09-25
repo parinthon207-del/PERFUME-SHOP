@@ -1,11 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PERFUME SHOP</title>
+    <title>AROMACRAFT — Fine Fragrances</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
+<body class="antialiased relative overflow-x-hidden">
+
+    <!-- Golden Ambient Background Blur Blobs -->
+    <div class="fixed top-[-10%] left-[-10%] w-[500px] h-[500px] bg-[#F3E5AB]/40 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+    <div class="fixed bottom-[-10%] right-[-5%] w-[600px] h-[600px] bg-[#E8D3A7]/30 rounded-full blur-[150px] pointer-events-none -z-10"></div>
+
+    <!-- Header Navigation -->
+    <header class="sticky top-0 z-40 px-6 lg:px-12 py-4 flex items-center justify-between transition-all">
+        <a href="#" class="flex items-center space-x-3">
+            <span class="text-xl md:text-2xl font-bold tracking-wider text-[#181716]">AROMACRAFT</span>
+            <span class="text-[9px] bg-[#C5A070]/20 text-[#181716] px-2 py-0.5 rounded font-bold tracking-widest uppercase">PARFUM</span>
+        </a>
+
+        <!-- Search Bar -->
+        <div class="hidden md:flex items-center input-search rounded-lg px-4 py-2 w-80 transition-all">
+            <i class="fa-solid fa-magnifying-glass text-[#8C827A] text-xs mr-3"></i>
+            <input type="text" id="search-input" oninput="handleSearch()" placeholder="ค้นหาน้ำหอมหรือแบรนด์" class="w-full text-xs bg-transparent outline-none placeholder-[#8C827A]">
+        </div>
+
+        <!-- Cart Button -->
+        <button onclick="toggleCartModal()" class="relative btn-primary px-5 py-2.5 rounded-lg text-xs font-semibold flex items-center space-x-2 active:scale-95 shadow-sm">
+            <i class="fa-solid fa-bag-shopping text-[#C5A070]"></i>
+            <span>ตะกร้า</span>
+            <span id="cart-badge" class="bg-[#C5A070] text-[#181716] text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">0</span>
+        </button>
+    </header>
+
+    
+
+    <!-- Hero Banner -->
+    <section class="py-12 px-6 lg:px-12 max-w-7xl mx-auto">
+        <div class="bg-[#181716] text-[#FDFBF7] rounded-2xl p-8 md:p-12 shadow-2xl relative overflow-hidden border border-[#C5A070]/30">
+            <p class="text-[#C5A070] text-xs tracking-widest uppercase mb-2 font-semibold">HAUTE PARFUMERIE</p>
+            <h1 class="text-3xl md:text-4xl font-bold mb-3 leading-snug">
+                Essence of Elegance. <br><span class="text-[#C5A070]">ความหอมเหนือกาลเวลา</span>
+            </h1>
+            <p class="text-[#8C827A] text-xs md:text-sm font-normal max-w-xl leading-relaxed">
+                สัมผัสความประณีตของน้ำหอมแท้เกรดพรีเมียม เลือกสรรกลิ่นที่เป็นตัวตนของคุณ
+            </p>
+        </div>
+    </section>
+
+    <!-- Main Catalog Section -->
+    <main class="max-w-7xl mx-auto px-6 lg:px-12 pb-16">
+        <!-- Filter Bar -->
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4 pb-4 border-b border-[#C5A070]/20">
+            <h2 class="text-xl font-bold text-[#181716]">รายการน้ำหอมทั้งหมด</h2>
+            
+            <div class="flex items-center gap-2 overflow-x-auto w-full md:w-auto">
+                <button onclick="filterCategory('ALL', event)" class="filter-btn active text-xs font-semibold px-4 py-2 rounded-lg">ทั้งหมด</button>
+                <button onclick="filterCategory('EDP', event)" class="filter-btn text-xs font-semibold px-4 py-2 rounded-lg">Eau de Parfum (EDP)</button>
+                <button onclick="filterCategory('EDT', event)" class="filter-btn text-xs font-semibold px-4 py-2 rounded-lg">Eau de Toilette (EDT)</button>
+            </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div id="product-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Dynamic Rendered Cards -->
+        </div>
+    </main>
+
+    <!-- Slide-over Cart Modal (Enhanced Depth Version) -->
+    <div id="cart-modal" class="fixed inset-0 z-50 invisible opacity-0 transition-opacity duration-300">
+        <!-- ฉากหลังมืดเบลอ -->
+        <div onclick="toggleCartModal()" class="absolute inset-0 bg-[#181716]/40 backdrop-blur-md transition-all duration-300"></div>
+    
+        <!-- Cart Panel สไลด์ขวา แบบมีมิติเงาลึก + ขอบทอง -->
+        <div id="cart-panel" class="absolute right-0 top-0 h-full w-full max-w-md glass-panel drawer-depth-shadow flex flex-col justify-between transform translate-x-full transition-drawer border-l border-[#C5A070]/30">
+        
+            <!-- Header มีมิติแยกชั้น -->
+            <div class="p-6 border-b border-[#C5A070]/20 flex items-center justify-between bg-white/70 backdrop-blur-md shadow-sm">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 rounded-full bg-[#C5A070]/15 text-[#C5A070] flex items-center justify-center text-sm border border-[#C5A070]/30">
+                        <i class="fa-solid fa-bag-shopping"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base font-bold text-[#181716] leading-none">ตะกร้าสินค้า</h3>
+                        <span class="text-[10px] text-[#8C827A] font-medium">AROMACRAFT BAG</span>
+                    </div>
+                </div>
+                <button onclick="toggleCartModal()" class="w-8 h-8 rounded-full hover:bg-stone-200/60 text-[#8C827A] hover:text-[#181716] flex items-center justify-center text-base transition-all">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Cart Items List -->
+            <div id="cart-items-container" class="p-6 overflow-y-auto flex-1 space-y-4">
+                <!-- Items inserted dynamically -->
+            </div>
+
+            <!-- Footer ยกรอบขึ้นจากพื้นหลัง -->
+            <div class="p-6 border-t border-[#C5A070]/20 bg-white/80 backdrop-blur-md space-y-3 shadow-[0_-10px_20px_rgba(0,0,0,0.02)]">
+                <div class="flex justify-between text-xs text-[#8C827A] font-medium">
+                    <span>ราคารวมสินค้า</span>
+                    <span id="cart-subtotal" class="text-[#181716] font-semibold">฿0</span>
+                </div>
+                <div class="flex justify-between text-xs text-[#8C827A] font-medium">
+                    <span>ค่าจัดส่ง</span>
+                    <span class="text-[#C5A070] font-semibold">ฟรี (FREE)</span>
+                </div>
+                <div class="flex justify-between text-sm font-bold text-[#181716] pt-2 border-t border-[#C5A070]/20">
+                    <span>ยอดชำระสุทธิ</span>
+                    <span id="cart-total" class="text-lg font-bold text-[#181716]">฿0</span>
+                </div>
+
+                <button onclick="handleCheckout()" class="w-full btn-primary py-3.5 rounded-xl font-semibold text-xs tracking-wider uppercase transition shadow-lg hover:shadow-xl active:scale-95">
+                    สั่งซื้อสินค้า
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <div class="bg-[#181716] text-[#FDFBF7] px-4 py-3 rounded-lg shadow-xl flex items-center space-x-3 text-xs border border-[#C5A070]/40">
+            <i class="fa-solid fa-check text-[#C5A070]"></i>
+            <span id="toast-message">เพิ่มลงตะกร้าเรียบร้อยแล้ว</span>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+
+    <!-- Pop-up แจ้งเตือนสั่งซื้อสำเร็จ (แบบไม่มีปุ่ม กดปิดอัตโนมัติ) -->
+    <div id="checkout-success-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm transition-all duration-300 invisible opacity-0">
+        <div id="success-panel" class="bg-white rounded-3xl p-8 max-w-sm w-full text-center shadow-2xl border border-[#C5A070]/30 transform transition-all duration-300">
+        
+            <!-- ไอคอนเครื่องหมายถูก -->
+            <div id="success-icon" class="w-20 h-20 bg-[#FDFBF7] border-2 border-[#C5A070] text-[#C5A070] rounded-full flex items-center justify-center mx-auto mb-5 text-3xl shadow-inner">
+                <i class="fa-solid fa-check"></i>
+            </div>
+
+            <h3 class="text-xl font-bold text-[#181716] mb-2 font-headline">สั่งซื้อสำเร็จ!</h3>
+            <p class="text-xs text-[#8C827A] leading-relaxed mb-2">
+                ขอบคุณที่ร่วมสัมผัสความหอมกับ AROMACRAFT<br>คำสั่งซื้อของคุณได้รับการยืนยันเรียบร้อยแล้ว
+            </p>
+            <span class="text-[10px] text-[#C5A070] font-medium italic">
+                (หน้าจอนี้จะปิดลงอัตโนมัติ)
+            </span>
+
+        </div>
+    </div>
     
 </body>
 </html>
